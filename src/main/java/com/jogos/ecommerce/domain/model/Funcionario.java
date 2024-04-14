@@ -37,13 +37,22 @@ public class Funcionario {
     @NotBlank
     private String cpf; 
 
+    
+    @NotBlank
     private String cep;
+    @NotBlank
     private String pais; 
+    @NotBlank
     private String Estado;
+    @NotBlank
     private String cidade; 
+    @NotBlank
     private String  bairro;
-    private String logradouro;
-    private String numero;
+    @NotBlank
+    private String logradouro; 
+    @NotBlank
+    private String numero; 
+    @NotBlank
     private String ponto_de_referencia;
 
     @ManyToOne
