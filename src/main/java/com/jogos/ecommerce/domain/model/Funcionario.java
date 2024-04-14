@@ -1,16 +1,16 @@
 package com.jogos.ecommerce.domain.model;
 
-
-import java.util.List;
+import java.sql.Date;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
+import jakarta.validation.constraints.Size;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,24 +19,34 @@ import lombok.Setter;
 @Getter
 @Setter
 @EqualsAndHashCode(onlyExplicitlyIncluded=true)
-@AllArgsConstructor
 
-public class Cargo {
+public class Funcionario {
      @Id
     // indetity -> forma nativa do sgbd(no caso auto increment.Para casos em que o banco é criado manualmente. AUTO é para quando for criando junto com a API)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Include
-    @Column(name="cod_cargo")
+    @Column(name="cod_funcionario")
     private Long id;
     
     @NotBlank
-    private float salario;
+    private String nome;
+    @Size(max=20)
+    private String telefone;
     @NotBlank
-    private  String descricao;
+    private  Date dt_nasc;
+    @NotBlank
+    private String cpf; 
 
-    @OneToMany(mappedBy = "cargo")
-   
-    private List<Funcionario> funcionarios;
+    private String cep;
+    private String pais; 
+    private String Estado;
+    private String cidade; 
+    private String  bairro;
+    private String logradouro;
+    private String numero;
+    private String ponto_de_referencia;
 
-   
+    @ManyToOne
+    @JoinColumn(name="cargo")
+    private Cargo cargo;
 }
