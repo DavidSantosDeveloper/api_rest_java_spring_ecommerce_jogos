@@ -9,6 +9,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.EqualsAndHashCode;
@@ -58,4 +59,8 @@ public class Funcionario {
     @ManyToOne
     @JoinColumn(name="cargo")
     private Cargo cargo;
+
+    @OneToOne(mappedBy = "funcionario")
+    @JoinColumn(name="cod_usuario")
+    private Usuario usuario;
 }
