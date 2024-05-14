@@ -2,6 +2,7 @@ package com.jogos.ecommerce.domain.model;
 
 import java.sql.Date;
 
+import java.lang.String;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
