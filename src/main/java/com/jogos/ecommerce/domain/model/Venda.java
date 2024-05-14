@@ -18,6 +18,10 @@ import lombok.Getter;
 import lombok.Setter;
 
 
+@Entity
+@Getter
+@Setter
+@EqualsAndHashCode(onlyExplicitlyIncluded=true)
 
 public class Venda {
     
@@ -28,10 +32,10 @@ public class Venda {
     @Column(name="cod_venda")
     private Long id;
     
-    @Column(name="cod_usuario")
+    @JoinColumn(name="cod_usuario")
     private Usuario usuario;
     @NotBlank
     private  Date dt_venda;
     @NotBlank
-    private String valor_total; 
+    private float valor_total; 
 }

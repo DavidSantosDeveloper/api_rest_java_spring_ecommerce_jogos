@@ -2,7 +2,6 @@ package com.jogos.ecommerce.domain.model;
 
 import java.sql.Date;
 import java.util.List;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -43,5 +42,10 @@ public class Usuario {
     @OneToOne
     @JoinColumn(name="cod_funcionario")
     private Funcionario funcionario;
+
+   @OneToOne(mappedBy = "usuario")
+    private Carrinho carrinho;
+
+
 
 }

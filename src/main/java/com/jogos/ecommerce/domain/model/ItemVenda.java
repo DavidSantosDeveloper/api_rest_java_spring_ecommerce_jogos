@@ -18,6 +18,11 @@ import lombok.Getter;
 import lombok.Setter;
 
 
+@Entity
+@Getter
+@Setter
+@EqualsAndHashCode(onlyExplicitlyIncluded=true)
+
 public class ItemVenda {
     @Id
     // indetity -> forma nativa do sgbd(no caso auto increment.Para casos em que o banco é criado manualmente. AUTO é para quando for criando junto com a API)
@@ -26,14 +31,14 @@ public class ItemVenda {
     @Column(name="cod_item_venda")
     private Long id;
     
-    @Column(name="cod_venda")
+    @JoinColumn(name = "cod_usuario")
     private Venda venda;
 
-    @Column(name="cod_produto")
+    @JoinColumn(name="cod_produto")
     private Produto produto;
 
     private Long quantidade;
     private float preco_unitario;
 
-    
+
 }

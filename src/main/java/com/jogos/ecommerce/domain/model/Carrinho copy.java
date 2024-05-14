@@ -4,6 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 import java.sql.Date;
+import java.math.BigDecimal;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -22,22 +23,18 @@ import lombok.Setter;
 @Setter
 @EqualsAndHashCode(onlyExplicitlyIncluded=true)
 
-public class Produto {
-    
+public class Carrinho {
     @Id
     // indetity -> forma nativa do sgbd(no caso auto increment.Para casos em que o banco é criado manualmente. AUTO é para quando for criando junto com a API)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Include
-    @Column(name="cod_produto")
+    @Column(name="cod_carrinho")
     private Long id;
     
-    @NotBlank
-    private String nome;
-    @NotBlank
-    private float preco;
-    private String foto_url;
-    private  Date descricao;
-    
-    private String categoria; 
+    @OneToOne
+    @JoinColumn(name = "cod_usuario")
+    private Usuario usuario;
+
+    private BigDecimal total;
 
 }
