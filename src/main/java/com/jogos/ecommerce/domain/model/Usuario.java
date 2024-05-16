@@ -43,8 +43,11 @@ public class Usuario {
     @JoinColumn(name="cod_funcionario")
     private Funcionario funcionario;
 
-   @OneToOne(mappedBy = "usuario")
-    private Carrinho carrinho;
+     @OneToOne(mappedBy = "usuario")
+     private Carrinho carrinho;
+
+     @OneToMany(mappedBy = "usuario")
+     private List<Venda> vendas;
 
 
 

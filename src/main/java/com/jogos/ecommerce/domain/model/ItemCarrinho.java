@@ -33,13 +33,18 @@ public class ItemCarrinho {
     @EqualsAndHashCode.Include
     @Column(name="cod_item_carrinho")
     private Long id;
-    
+   
+    private Long quantidade;
+    private float preco_unitario;
+
+    @ManyToOne
     @JoinColumn(name="cod_carrinho")
     private Carrinho carrinho;
 
+    @ManyToOne
     @JoinColumn(name="cod_produto")
     private Produto produto;
 
-    private Long quantidade;
-    private float preco_unitario;
+    
+   
 }
