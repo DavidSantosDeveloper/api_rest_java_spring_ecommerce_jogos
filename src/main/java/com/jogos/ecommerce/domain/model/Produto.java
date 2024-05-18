@@ -1,6 +1,7 @@
 package com.jogos.ecommerce.domain.model;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 
 import java.sql.Date;
@@ -35,7 +36,7 @@ public class Produto {
     
     @NotBlank
     private String nome;
-    @NotBlank
+    @Positive
     private float preco;
     private String foto_url;
     private  Date descricao;
