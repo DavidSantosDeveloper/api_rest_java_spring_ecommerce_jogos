@@ -37,9 +37,9 @@ public class Produto {
     @NotBlank
     private String nome;
     @Positive
-    private float preco;
+    private double preco;
     private String foto_url;
-    private  Date descricao;
+    private  String descricao;
     
     private String categoria; 
 

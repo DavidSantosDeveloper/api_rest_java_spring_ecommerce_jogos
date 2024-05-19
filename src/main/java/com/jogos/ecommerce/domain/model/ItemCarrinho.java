@@ -35,7 +35,7 @@ public class ItemCarrinho {
     private Long id;
    
     private Long quantidade;
-    private float preco_unitario;
+    private double preco_unitario;
 
     @ManyToOne
     @JoinColumn(name="cod_carrinho")

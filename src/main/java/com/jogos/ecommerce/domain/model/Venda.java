@@ -36,7 +36,7 @@ public class Venda {
     @NotBlank
     private  Date dt_venda;
     @NotBlank
-    private float valor_total; 
+    private double valor_total; 
     
     @ManyToOne
     @JoinColumn(name="cod_usuario")

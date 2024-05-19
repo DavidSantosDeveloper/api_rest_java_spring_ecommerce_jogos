@@ -30,7 +30,7 @@ public class Cargo {
     private Long id;
     
     @NotBlank
-    private float salario;
+    private double salario;
     @NotBlank
     private  String descricao;
 

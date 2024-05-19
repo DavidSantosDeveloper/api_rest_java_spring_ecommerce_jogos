@@ -31,7 +31,7 @@ public class ItemVenda {
     @Column(name="cod_item_venda")
     private Long id;
     private Long quantidade;
-    private float preco_unitario;
+    private double preco_unitario;
 
     @ManyToOne
     @JoinColumn(name = "cod_venda")
