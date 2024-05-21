@@ -30,8 +30,6 @@ public class Cargo {
     private Long id;
     
     @NotBlank
-    private double salario;
-    @NotBlank
     private  String descricao;
 
     @OneToMany(mappedBy = "cargo")

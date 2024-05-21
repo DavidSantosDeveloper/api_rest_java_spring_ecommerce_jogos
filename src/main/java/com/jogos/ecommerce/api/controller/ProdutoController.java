@@ -1,5 +1,6 @@
 package com.jogos.ecommerce.api.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.jogos.ecommerce.domain.exception.*;
 import com.jogos.ecommerce.domain.model.*;
+import com.jogos.ecommerce.domain.dto.*;
 import com.jogos.ecommerce.domain.repository.*;
 import com.jogos.ecommerce.domain.service.*;
 
@@ -37,17 +39,27 @@ public class ProdutoController {
 
 
     @GetMapping("")
-    public List<Produto> listar(){
-     
-        return produtoRepository.findAll();
-     }
+    public List<ProdutoDTO> listar(){
+        List<Produto> produtos=produtoRepository.findAll();
+        //conversao para  o para produtoDTO
+        List<ProdutoDTO> produtosDTO=new ArrayList<ProdutoDTO>();
+        for(int i=0;i< produtos.size();i++){
+            Produto produto=produtos.get(i);
+            ProdutoDTO produtoDTO=new ProdutoDTO(produto.getId(),produto.getNome(),produto.getPreco(),produto.getFoto_url(),produto.getDescricao(),produto.getCategoria());
+            produtosDTO.add(produtoDTO);  
+        }
+
+        return produtosDTO;
+     } 
 
      @GetMapping("/{produtoId}")
-     public ResponseEntity<Produto> buscarPorId(@PathVariable Long produtoId){
+     public ResponseEntity<ProdutoDTO> buscarPorId(@PathVariable Long produtoId){
         Optional<Produto> pesquisaPeloProduto=produtoRepository.findById(produtoId);
 
         if(pesquisaPeloProduto.isPresent()){
-            return ResponseEntity.ok(pesquisaPeloProduto.get()); 
+            Produto produto=pesquisaPeloProduto.get();
+            ProdutoDTO produtoDTO=new ProdutoDTO(produtoId,produto.getNome(), produto.getPreco(),produto.getFoto_url(),produto.getDescricao(),produto.getCategoria());
+            return ResponseEntity.ok(produtoDTO); 
         }
         else{
             return ResponseEntity.notFound().build();
@@ -56,23 +68,21 @@ public class ProdutoController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("")
-     public Produto cadrastrar(@Valid @RequestBody  Produto produto){
+     public Produto cadrastrar(@Valid @RequestBody  ProdutoDTO produtoDTO){
+        Produto produto=new Produto(produtoDTO);
         // return produtoRepository.save(produto);
         return produtoService.salvarProduto(produto);
      }
 
      @PutMapping("/{produtoId}")
-     public ResponseEntity<Produto>atualizar(@PathVariable Long produtoId,@Valid @RequestBody Produto produto){
+     public ResponseEntity<ProdutoDTO>atualizar(@PathVariable Long produtoId,@Valid @RequestBody ProdutoDTO produtoDTO){
          if(produtoRepository.existsById(produtoId)==false){
              return ResponseEntity.notFound().build();
          }
-        //  associa o id passado via url ao objeto java criado(que foi criado via dados do corpo body)
-         produto.setId(produtoId);
-        //  metodo save verifica existe um produto com id informado:Se sim,atualiza os dados.Senão cria um novo registro na tabela produto 
-        //  produtoRepository.save(produto);
+         Produto produto=new Produto(produtoId,produtoDTO);
         produtoService.salvarProduto(produto);
         //  retorna operacao PUT feita com sucesso! e envia uma resposta com o json que representa o produto
-         return ResponseEntity.ok(produto);
+         return ResponseEntity.ok(produtoDTO);
      }
 
      @DeleteMapping("/{produtoId}")

@@ -38,7 +38,8 @@ public class Funcionario {
     private  Date dt_nasc;
     @NotBlank
     private String cpf; 
-
+    @NotBlank
+    private double salario;
     
     @NotBlank
     private String cep;
