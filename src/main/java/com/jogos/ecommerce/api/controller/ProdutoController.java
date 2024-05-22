@@ -1,5 +1,4 @@
 package com.jogos.ecommerce.api.controller;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -24,7 +23,6 @@ import com.jogos.ecommerce.domain.repository.*;
 import com.jogos.ecommerce.domain.service.*;
 
 import jakarta.validation.Valid;
-
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor        // gera um construtor automaticamente
@@ -37,9 +35,9 @@ public class ProdutoController {
     @Autowired
     private ProdutoService produtoService;
 
-
     @GetMapping("")
     public List<ProdutoDTO> listar(){
+        /* 
         List<Produto> produtos=produtoRepository.findAll();
         //conversao para  o para produtoDTO
         List<ProdutoDTO> produtosDTO=new ArrayList<ProdutoDTO>();
@@ -50,20 +48,21 @@ public class ProdutoController {
         }
 
         return produtosDTO;
+        */
+        return produtoService.ListarProdutos();
      } 
 
      @GetMapping("/{produtoId}")
      public ResponseEntity<ProdutoDTO> buscarPorId(@PathVariable Long produtoId){
-        Optional<Produto> pesquisaPeloProduto=produtoRepository.findById(produtoId);
-
+        Optional<ProdutoDTO> pesquisaPeloProduto=Optional.ofNullable(produtoService.findById(produtoId));
         if(pesquisaPeloProduto.isPresent()){
-            Produto produto=pesquisaPeloProduto.get();
-            ProdutoDTO produtoDTO=new ProdutoDTO(produtoId,produto.getNome(), produto.getPreco(),produto.getFoto_url(),produto.getDescricao(),produto.getCategoria());
-            return ResponseEntity.ok(produtoDTO); 
+            return ResponseEntity.ok(pesquisaPeloProduto.get()); 
         }
         else{
             return ResponseEntity.notFound().build();
         }
+        
+
      }
 
     @ResponseStatus(HttpStatus.CREATED)
@@ -79,9 +78,11 @@ public class ProdutoController {
          if(produtoRepository.existsById(produtoId)==false){
              return ResponseEntity.notFound().build();
          }
+         if(produtoDTO.id()!=null){
+            return ResponseEntity.badRequest().build();
+         }
          Produto produto=new Produto(produtoId,produtoDTO);
-        produtoService.salvarProduto(produto);
-        //  retorna operacao PUT feita com sucesso! e envia uma resposta com o json que representa o produto
+         produtoService.salvarProduto(produto);
          return ResponseEntity.ok(produtoDTO);
      }
 
