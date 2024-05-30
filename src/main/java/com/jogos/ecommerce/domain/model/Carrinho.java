@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
 
+import com.jogos.ecommerce.domain.dto.CarrinhoDTO;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -33,8 +35,19 @@ public class Carrinho implements Serializable{
     @JoinColumn(name = "cod_usuario")
     private Usuario usuario;          
 
-    private BigDecimal total;
+    private double total;
 
     @OneToMany(mappedBy = "carrinho")
     private List<ItemCarrinho> itemCarrinhos;
+
+     public Carrinho(CarrinhoDTO carrinho_dto){
+        this.usuario=carrinho_dto.usuario();
+        this.total=carrinho_dto.total();
+        
+    }
+    public Carrinho(Long carrinhoId,CarrinhoDTO carrinho_dto){
+        this.id=carrinho_dto.id();
+        this.usuario=carrinho_dto.usuario();
+        this.total=carrinho_dto.total();
+    } 
 }

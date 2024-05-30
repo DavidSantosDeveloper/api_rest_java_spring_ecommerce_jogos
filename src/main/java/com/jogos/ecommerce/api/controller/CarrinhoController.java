@@ -20,6 +20,7 @@ import com.jogos.ecommerce.domain.exception.*;
 import com.jogos.ecommerce.domain.model.*;
 import com.jogos.ecommerce.domain.repository.*;
 import com.jogos.ecommerce.domain.service.*;
+import com.jogos.ecommerce.domain.dto.*;
 
 import jakarta.validation.Valid;
 
@@ -37,14 +38,14 @@ public class CarrinhoController {
 
 
     @GetMapping("")
-    public List<Carrinho> listar(){
+    public List<CarrinhoDTO> listar(){
      
-        return carrinhoRepository.findAll();
+        return carrinhoService.ListarCarrinhos();
      }
 
      @GetMapping("/{carrrinhoId}")
-     public ResponseEntity<Carrinho> buscarPorId(@PathVariable Long carrrinhoId){
-        Optional<Carrinho> pesquisaPeloCarrinho=carrinhoRepository.findById(carrrinhoId);
+     public ResponseEntity<CarrinhoDTO> buscarPorId(@PathVariable Long carrrinhoId){
+        Optional<CarrinhoDTO> pesquisaPeloCarrinho=Optional.ofNullable(carrinhoService.findById(carrrinhoId));
 
         if(pesquisaPeloCarrinho.isPresent()){
             return ResponseEntity.ok(pesquisaPeloCarrinho.get()); 
@@ -56,23 +57,32 @@ public class CarrinhoController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("")
-     public Carrinho cadrastrar(@Valid @RequestBody  Carrinho cliente){
+     public Carrinho cadrastrar(@Valid @RequestBody  CarrinhoDTO carrinhoDTO){
         // return carrinhoRepository.save(cliente);
-        return carrinhoService.salvarCarrinho(cliente);
+        return carrinhoService.salvarCarrinho(carrinhoDTO);
      }
 
      @PutMapping("/{carrrinhoId}")
-     public ResponseEntity<Carrinho>atualizar(@PathVariable Long carrrinhoId,@Valid @RequestBody Carrinho cliente){
-         if(carrinhoRepository.existsById(carrrinhoId)==false){
-             return ResponseEntity.notFound().build();
-         }
-        //  associa o id passado via url ao objeto java criado(que foi criado via dados do corpo body)
-         cliente.setId(carrrinhoId);
-        //  metodo save verifica existe um cliente com id informado:Se sim,atualiza os dados.Senão cria um novo registro na tabela cliente 
-        //  carrinhoRepository.save(cliente);
-        carrinhoService.salvarCarrinho(cliente);
-        //  retorna operacao PUT feita com sucesso! e envia uma resposta com o json que representa o cliente
-         return ResponseEntity.ok(cliente);
+     public ResponseEntity<CarrinhoDTO>atualizar(@PathVariable Long carrinhoId,@Valid @RequestBody CarrinhoDTO carrinhoDTO){
+        //  if(carrinhoService.existsById(carrrinhoId)==false){
+        //      return ResponseEntity.notFound().build();
+        //  }
+        // //  associa o id passado via url ao objeto java criado(que foi criado via dados do corpo body)
+        //  cliente.setId(carrrinhoId);
+        // //  metodo save verifica existe um cliente com id informado:Se sim,atualiza os dados.Senão cria um novo registro na tabela cliente 
+        // //  carrinhoRepository.save(cliente);
+        // carrinhoService.salvarCarrinho(cliente);
+        // //  retorna operacao PUT feita com sucesso! e envia uma resposta com o json que representa o cliente
+        //  return ResponseEntity.ok(cliente);
+        if(carrinhoRepository.existsById(carrinhoId)==false){
+            return ResponseEntity.notFound().build();
+        }
+        if(carrinhoDTO.id()!=null){
+           return ResponseEntity.badRequest().build();
+        }
+        Carrinho carrinho=new Carrinho(carrinhoId,carrinhoDTO);
+        carrinhoService.editarCarrinho(carrinho);
+        return ResponseEntity.ok(carrinhoDTO);
      }
 
      @DeleteMapping("/{carrrinhoId}")
@@ -81,7 +91,7 @@ public class CarrinhoController {
             return ResponseEntity.notFound().build();
         }
 
-        carrinhoRepository.deleteById(carrrinhoId);
+        carrinhoService.excluirCarrinho(carrrinhoId);
         // Executou com suceeso e resposta sem body (Ideal para metodo http delete)
         return ResponseEntity.noContent().build();
      }

@@ -3,6 +3,8 @@ package com.jogos.ecommerce.domain.model;
 
 import java.util.List;
 
+import com.jogos.ecommerce.domain.dto.CargoDTO;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -13,6 +15,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
@@ -20,7 +23,7 @@ import lombok.Setter;
 @Setter
 @EqualsAndHashCode(onlyExplicitlyIncluded=true)
 @AllArgsConstructor
-
+@NoArgsConstructor
 public class Cargo {
      @Id
     // indetity -> forma nativa do sgbd(no caso auto increment.Para casos em que o banco é criado manualmente. AUTO é para quando for criando junto com a API)
@@ -28,7 +31,8 @@ public class Cargo {
     @EqualsAndHashCode.Include
     @Column(name="cod_cargo")
     private Long id;
-    
+    @NotBlank
+    private  String nome;
     @NotBlank
     private  String descricao;
 
@@ -36,5 +40,13 @@ public class Cargo {
    
     private List<Funcionario> funcionarios;
 
-   
+    public Cargo(CargoDTO cargoDTO){
+        this.nome=cargoDTO.nome();
+        this.descricao=cargoDTO.descricao();
+    }
+    public Cargo(Long id,CargoDTO cargoDTO){
+        this.id=id;
+        this.nome=cargoDTO.nome();
+        this.descricao=cargoDTO.descricao();
+    }
 }
