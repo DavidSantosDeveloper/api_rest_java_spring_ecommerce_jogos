@@ -16,6 +16,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.jogos.ecommerce.domain.dto.input.INPUT_ItemCarrinhoDTO;
+import com.jogos.ecommerce.domain.dto.output.OUTPUT_FuncionarioDTO;
+import com.jogos.ecommerce.domain.dto.output.OUTPUT_ItemCarrinhoDTO;
 import com.jogos.ecommerce.domain.exception.*;
 import com.jogos.ecommerce.domain.model.*;
 import com.jogos.ecommerce.domain.repository.*;
@@ -37,14 +40,14 @@ public class ItemCarrinhoController {
 
 
     @GetMapping("")
-    public List<ItemCarrinho> listar(){
+    public List<OUTPUT_ItemCarrinhoDTO > listar(){
      
-        return itemCarrinhoRepository.findAll();
+        return itemCarrinhoService.ListarItemCarrinho();
      }
 
      @GetMapping("/{itemCarrinhoId}")
-     public ResponseEntity<ItemCarrinho> buscarPorId(@PathVariable Long itemCarrinhoId){
-        Optional<ItemCarrinho> pesquisaPeloItemCarrinho=itemCarrinhoRepository.findById(itemCarrinhoId);
+     public ResponseEntity<OUTPUT_ItemCarrinhoDTO> buscarPorId(@PathVariable Long itemCarrinhoId){
+        Optional<OUTPUT_ItemCarrinhoDTO> pesquisaPeloItemCarrinho=Optional.ofNullable(itemCarrinhoService.findById(itemCarrinhoId));
 
         if(pesquisaPeloItemCarrinho.isPresent()){
             return ResponseEntity.ok(pesquisaPeloItemCarrinho.get()); 
@@ -56,23 +59,18 @@ public class ItemCarrinhoController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("")
-     public ItemCarrinho cadrastrar(@Valid @RequestBody  ItemCarrinho itemCarrinho){
+     public OUTPUT_ItemCarrinhoDTO cadrastrar(@Valid @RequestBody  INPUT_ItemCarrinhoDTO itemCarrinhoDTO){
         // return itemCarrinhoRepository.save(itemCarrinho);
-        return itemCarrinhoService.salvarItemCarrinho(itemCarrinho);
+        return itemCarrinhoService.salvarItemCarrinho(itemCarrinhoDTO);
      }
 
      @PutMapping("/{itemCarrinhoId}")
-     public ResponseEntity<ItemCarrinho>atualizar(@PathVariable Long itemCarrinhoId,@Valid @RequestBody ItemCarrinho itemCarrinho){
+     public ResponseEntity<OUTPUT_ItemCarrinhoDTO>atualizar(@PathVariable Long itemCarrinhoId,@Valid @RequestBody INPUT_ItemCarrinhoDTO itemCarrinhoDTO){
          if(itemCarrinhoRepository.existsById(itemCarrinhoId)==false){
              return ResponseEntity.notFound().build();
          }
-        //  associa o id passado via url ao objeto java criado(que foi criado via dados do corpo body)
-         itemCarrinho.setId(itemCarrinhoId);
-        //  metodo save verifica existe um itemCarrinho com id informado:Se sim,atualiza os dados.Senão cria um novo registro na tabela itemCarrinho 
-        //  itemCarrinhoRepository.save(itemCarrinho);
-        itemCarrinhoService.salvarItemCarrinho(itemCarrinho);
-        //  retorna operacao PUT feita com sucesso! e envia uma resposta com o json que representa o itemCarrinho
-         return ResponseEntity.ok(itemCarrinho);
+         OUTPUT_ItemCarrinhoDTO itemCarrinho_editado=itemCarrinhoService.editarItemCarrinho(itemCarrinhoDTO);
+         return ResponseEntity.ok(itemCarrinho_editado);
      }
 
      @DeleteMapping("/{itemCarrinhoId}")
@@ -81,7 +79,7 @@ public class ItemCarrinhoController {
             return ResponseEntity.notFound().build();
         }
 
-        itemCarrinhoRepository.deleteById(itemCarrinhoId);
+        itemCarrinhoService.excluirItemCarrinho(itemCarrinhoId);
         // Executou com suceeso e resposta sem body (Ideal para metodo http delete)
         return ResponseEntity.noContent().build();
      }
