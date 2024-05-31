@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import com.jogos.ecommerce.domain.dto.CargoDTO;
 import com.jogos.ecommerce.domain.model.*;
 
+@Repository
 public interface CargoRepository extends JpaRepository<Cargo,Long> {
     Cargo findById(long id);
 

@@ -2,6 +2,8 @@ package com.jogos.ecommerce.domain.model;
 
 import java.sql.Date;
 
+import com.jogos.ecommerce.domain.dto.ClienteDTO;
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import jakarta.persistence.Column;
@@ -42,7 +44,7 @@ public class Cliente {
 
     private String cep;
     private String pais; 
-    private String Estado;
+    private String estado;
     private String cidade; 
     private String  bairro;
     private String logradouro;
@@ -51,4 +53,37 @@ public class Cliente {
 
     @OneToOne(mappedBy = "cliente")
     private Usuario usuario;
+
+
+    public Cliente(ClienteDTO clienteDTO){
+        this.nome=clienteDTO.nome();
+        this.telefone=clienteDTO.telefone();
+        this.dt_nasc=clienteDTO.dt_nasc();
+        this.cpf=clienteDTO.cpf();
+        this.cep=clienteDTO.cep();
+       this.pais=clienteDTO.pais();
+       this.estado=clienteDTO.estado();
+       this.cidade=clienteDTO.cidade();
+       this.bairro=clienteDTO.bairro();
+       this.logradouro=clienteDTO.logradouro();
+       this.numero=clienteDTO.numero();
+       this.ponto_de_referencia=clienteDTO.ponto_de_referencia();
+
+    }
+    public Cliente(Long clienteId, ClienteDTO clienteDTO){
+        this.id=clienteId;
+        this.nome=clienteDTO.nome();
+        this.telefone=clienteDTO.telefone();
+        this.dt_nasc=clienteDTO.dt_nasc();
+        this.cpf=clienteDTO.cpf();
+        this.cep=clienteDTO.cep();
+       this.pais=clienteDTO.pais();
+       this.estado=clienteDTO.estado();
+       this.cidade=clienteDTO.cidade();
+       this.bairro=clienteDTO.bairro();
+       this.logradouro=clienteDTO.logradouro();
+       this.numero=clienteDTO.numero();
+       this.ponto_de_referencia=clienteDTO.ponto_de_referencia();
+
+    }
 }

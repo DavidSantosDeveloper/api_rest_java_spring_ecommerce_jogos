@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.jogos.ecommerce.domain.dto.ClienteDTO;
 import com.jogos.ecommerce.domain.exception.*;
 import com.jogos.ecommerce.domain.model.*;
 import com.jogos.ecommerce.domain.repository.*;
@@ -37,14 +38,14 @@ public class ClienteController {
 
 
     @GetMapping("")
-    public List<Cliente> listar(){
+    public List<ClienteDTO> listar(){
      
-        return clienteRepository.findAll();
+        return clienteService.ListarClientes();
      }
 
      @GetMapping("/{clienteId}")
-     public ResponseEntity<Cliente> buscarPorId(@PathVariable Long clienteId){
-        Optional<Cliente> pesquisaPeloCliente=clienteRepository.findById(clienteId);
+     public ResponseEntity<ClienteDTO> buscarPorId(@PathVariable Long clienteId){
+        Optional<ClienteDTO> pesquisaPeloCliente=Optional.ofNullable(clienteService.findById(clienteId));
 
         if(pesquisaPeloCliente.isPresent()){
             return ResponseEntity.ok(pesquisaPeloCliente.get()); 
@@ -56,23 +57,22 @@ public class ClienteController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("")
-     public Cliente cadrastrar(@Valid @RequestBody  Cliente cliente){
+     public Cliente cadrastrar(@Valid @RequestBody  ClienteDTO clienteDTO){
         // return clienteRepository.save(cliente);
-        return clienteService.salvarCliente(cliente);
+        return clienteService.salvarCliente(clienteDTO);
      }
 
      @PutMapping("/{clienteId}")
-     public ResponseEntity<Cliente>atualizar(@PathVariable Long clienteId,@Valid @RequestBody Cliente cliente){
-         if(clienteRepository.existsById(clienteId)==false){
-             return ResponseEntity.notFound().build();
-         }
-        //  associa o id passado via url ao objeto java criado(que foi criado via dados do corpo body)
-         cliente.setId(clienteId);
-        //  metodo save verifica existe um cliente com id informado:Se sim,atualiza os dados.Senão cria um novo registro na tabela cliente 
-        //  clienteRepository.save(cliente);
-        clienteService.salvarCliente(cliente);
-        //  retorna operacao PUT feita com sucesso! e envia uma resposta com o json que representa o cliente
-         return ResponseEntity.ok(cliente);
+     public ResponseEntity<ClienteDTO>atualizar(@PathVariable Long clienteId,@Valid @RequestBody ClienteDTO clienteDTO){
+        if(clienteRepository.existsById(clienteId)==false){
+            return ResponseEntity.notFound().build();
+        }
+        if(clienteDTO.id()!=null){
+           return ResponseEntity.badRequest().build();
+        }
+        clienteService.salvarCliente(clienteDTO);
+        return ResponseEntity.ok(clienteDTO);
+        
      }
 
      @DeleteMapping("/{clienteId}")
@@ -80,9 +80,7 @@ public class ClienteController {
         if(clienteRepository.existsById(clienteId)==false){
             return ResponseEntity.notFound().build();
         }
-
-        clienteRepository.deleteById(clienteId);
-        // Executou com suceeso e resposta sem body (Ideal para metodo http delete)
+        clienteService.excluirCliente(clienteId);
         return ResponseEntity.noContent().build();
      }
 

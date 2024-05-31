@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.jogos.ecommerce.domain.dto.input.INPUT_FuncionarioDTO;
+import com.jogos.ecommerce.domain.dto.output.OUTPUT_FuncionarioDTO;
 import com.jogos.ecommerce.domain.exception.*;
 import com.jogos.ecommerce.domain.model.*;
 import com.jogos.ecommerce.domain.repository.*;
@@ -37,17 +39,19 @@ public class FuncionarioController {
 
 
     @GetMapping("")
-    public List<Funcionario> listar(){
+    public List<OUTPUT_FuncionarioDTO> listar(){
      
-        return funcionarioRepository.findAll();
+        return funcionarioService.ListarFuncionarios();
      }
 
      @GetMapping("/{funcionarioId}")
-     public ResponseEntity<Funcionario> buscarPorId(@PathVariable Long funcionarioId){
+     public ResponseEntity<OUTPUT_FuncionarioDTO> buscarPorId(@PathVariable Long funcionarioId){
         Optional<Funcionario> pesquisaPeloFuncionario=funcionarioRepository.findById(funcionarioId);
 
         if(pesquisaPeloFuncionario.isPresent()){
-            return ResponseEntity.ok(pesquisaPeloFuncionario.get()); 
+            var funcionario=pesquisaPeloFuncionario.get();
+            var funcionarioDTO=new OUTPUT_FuncionarioDTO(funcionarioId, funcionario.getNome(),funcionario.getTelefone(),funcionario.getDt_nasc(),funcionario.getCpf(), funcionario.getSalario(),funcionario.getCep(),funcionario.getPais(),funcionario.getEstado(),funcionario.getCidade(),funcionario.getBairro(), funcionario.getLogradouro(), funcionario.getNumero(), funcionario.getPonto_de_referencia(), funcionario.getCargo());
+            return ResponseEntity.ok(funcionarioDTO); 
         }
         else{
             return ResponseEntity.notFound().build();
@@ -56,23 +60,20 @@ public class FuncionarioController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("")
-     public Funcionario cadrastrar(@Valid @RequestBody  Funcionario funcionario){
+     public OUTPUT_FuncionarioDTO cadrastrar(@Valid @RequestBody  INPUT_FuncionarioDTO funcionarioDTO){
         // return funcionarioRepository.save(funcionario);
-        return funcionarioService.salvarFuncionario(funcionario);
+        return funcionarioService.salvarFuncionario(funcionarioDTO);
      }
 
      @PutMapping("/{funcionarioId}")
-     public ResponseEntity<Funcionario>atualizar(@PathVariable Long funcionarioId,@Valid @RequestBody Funcionario funcionario){
+     public ResponseEntity<OUTPUT_FuncionarioDTO> atualizar(@PathVariable Long funcionarioId,@Valid @RequestBody INPUT_FuncionarioDTO funcionarioDTO){
          if(funcionarioRepository.existsById(funcionarioId)==false){
              return ResponseEntity.notFound().build();
          }
-        //  associa o id passado via url ao objeto java criado(que foi criado via dados do corpo body)
-         funcionario.setId(funcionarioId);
-        //  metodo save verifica existe um funcionario com id informado:Se sim,atualiza os dados.Senão cria um novo registro na tabela funcionario 
-        //  funcionarioRepository.save(funcionario);
-        funcionarioService.salvarFuncionario(funcionario);
-        //  retorna operacao PUT feita com sucesso! e envia uma resposta com o json que representa o funcionario
-         return ResponseEntity.ok(funcionario);
+         OUTPUT_FuncionarioDTO funcionario_editado=funcionarioService.editarFuncionario(funcionarioDTO);
+         return ResponseEntity.ok(funcionario_editado);
+
+        
      }
 
      @DeleteMapping("/{funcionarioId}")
@@ -81,7 +82,7 @@ public class FuncionarioController {
             return ResponseEntity.notFound().build();
         }
 
-        funcionarioRepository.deleteById(funcionarioId);
+        funcionarioService.excluirFuncionario(funcionarioId);
         // Executou com suceeso e resposta sem body (Ideal para metodo http delete)
         return ResponseEntity.noContent().build();
      }

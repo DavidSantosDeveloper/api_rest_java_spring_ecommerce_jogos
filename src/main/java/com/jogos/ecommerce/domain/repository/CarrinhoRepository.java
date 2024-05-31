@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import com.jogos.ecommerce.domain.model.*;
 import com.jogos.ecommerce.domain.dto.*;
 
+@Repository
 public interface CarrinhoRepository extends JpaRepository<Carrinho,Long> {
     Carrinho findById(long id);
 

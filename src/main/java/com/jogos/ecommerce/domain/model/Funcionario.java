@@ -2,6 +2,9 @@ package com.jogos.ecommerce.domain.model;
 
 import java.sql.Date;
 
+import com.jogos.ecommerce.domain.dto.input.INPUT_FuncionarioDTO;
+import com.jogos.ecommerce.domain.dto.output.OUTPUT_FuncionarioDTO;
+
 import java.lang.String;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -46,7 +49,7 @@ public class Funcionario {
     @NotBlank
     private String pais; 
     @NotBlank
-    private String Estado;
+    private String estado;
     @NotBlank
     private String cidade; 
     @NotBlank
@@ -65,4 +68,41 @@ public class Funcionario {
     @OneToOne(mappedBy = "funcionario")
     @JoinColumn(name="cod_usuario")
     private Usuario usuario;
+
+
+    public Funcionario(OUTPUT_FuncionarioDTO funcionarioDTO){ 
+        this.id=funcionarioDTO.id();  
+        this.nome=funcionarioDTO.nome();
+        this.telefone=funcionarioDTO.telefone();
+        this.dt_nasc=funcionarioDTO.dt_nasc();
+        this.cpf=funcionarioDTO.cpf();
+        this.salario=funcionarioDTO.salario();
+        this.cep=funcionarioDTO.cep();
+        this.estado=funcionarioDTO.estado();
+        this.pais=funcionarioDTO.pais();
+        this.cidade=funcionarioDTO.cidade();
+        this.bairro=funcionarioDTO.bairro();
+        this.logradouro=funcionarioDTO.logradouro();
+        this.numero=funcionarioDTO.numero();
+        this.ponto_de_referencia=funcionarioDTO.ponto_de_referencia();
+        this.cargo=funcionarioDTO.cargo();
+    }
+    public Funcionario(INPUT_FuncionarioDTO funcionarioDTO){  
+        this.nome=funcionarioDTO.nome();
+        this.telefone=funcionarioDTO.telefone();
+        this.dt_nasc=funcionarioDTO.dt_nasc();
+        this.cpf=funcionarioDTO.cpf();
+        this.salario=funcionarioDTO.salario();
+        this.cep=funcionarioDTO.cep();
+        this.estado=funcionarioDTO.estado();
+        this.pais=funcionarioDTO.pais();
+        this.cidade=funcionarioDTO.cidade();
+        this.bairro=funcionarioDTO.bairro();
+        this.logradouro=funcionarioDTO.logradouro();
+        this.numero=funcionarioDTO.numero();
+        this.ponto_de_referencia=funcionarioDTO.ponto_de_referencia();
+        this.cargo=funcionarioDTO.cargo();
+    }
+    
+
 }
