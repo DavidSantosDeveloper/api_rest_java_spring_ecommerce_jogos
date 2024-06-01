@@ -41,6 +41,11 @@ public class ItemVenda {
     @JoinColumn(name="cod_produto")
     private Produto produto;
 
-
+    public ItemVenda(Long quantidade, double preco_unitario, Venda venda, Produto produto) {
+        this.quantidade=quantidade;
+        this.preco_unitario=preco_unitario;
+        this.venda=venda;
+        this.produto=produto;
+    }
 
 }

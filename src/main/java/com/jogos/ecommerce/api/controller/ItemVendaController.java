@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.jogos.ecommerce.domain.dto.input.INPUT_ItemVenda_DTO;
+import com.jogos.ecommerce.domain.dto.output.OUTPUT_ItemVenda_DTO;
 import com.jogos.ecommerce.domain.exception.*;
 import com.jogos.ecommerce.domain.model.*;
 import com.jogos.ecommerce.domain.repository.*;
@@ -43,8 +45,8 @@ public class ItemVendaController {
      }
 
      @GetMapping("/{itemVendaId}")
-     public ResponseEntity<ItemVenda> buscarPorId(@PathVariable Long itemVendaId){
-        Optional<ItemVenda> pesquisaPeloItemVenda=itemVendaRepository.findById(itemVendaId);
+     public ResponseEntity<OUTPUT_ItemVenda_DTO> buscarPorId(@PathVariable Long itemVendaId){
+        Optional<OUTPUT_ItemVenda_DTO> pesquisaPeloItemVenda=Optional.ofNullable(itemVendaService.findById(itemVendaId));
 
         if(pesquisaPeloItemVenda.isPresent()){
             return ResponseEntity.ok(pesquisaPeloItemVenda.get()); 
@@ -56,23 +58,18 @@ public class ItemVendaController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("")
-     public ItemVenda cadrastrar(@Valid @RequestBody  ItemVenda itemCarrinho){
+     public OUTPUT_ItemVenda_DTO cadrastrar(@Valid @RequestBody INPUT_ItemVenda_DTO itemVendaDTO){
         // return itemVendaRepository.save(itemCarrinho);
-        return itemVendaService.salvarItemVenda(itemCarrinho);
+        return itemVendaService.salvarItemVenda(itemVendaDTO);
      }
 
      @PutMapping("/{itemVendaId}")
-     public ResponseEntity<ItemVenda>atualizar(@PathVariable Long itemVendaId,@Valid @RequestBody ItemVenda itemCarrinho){
+     public ResponseEntity<OUTPUT_ItemVenda_DTO>atualizar(@PathVariable Long itemVendaId,@Valid @RequestBody INPUT_ItemVenda_DTO itemCarrinhoDTO){
          if(itemVendaRepository.existsById(itemVendaId)==false){
              return ResponseEntity.notFound().build();
          }
-        //  associa o id passado via url ao objeto java criado(que foi criado via dados do corpo body)
-         itemCarrinho.setId(itemVendaId);
-        //  metodo save verifica existe um itemCarrinho com id informado:Se sim,atualiza os dados.Senão cria um novo registro na tabela itemCarrinho 
-        //  itemVendaRepository.save(itemCarrinho);
-        itemVendaService.salvarItemVenda(itemCarrinho);
-        //  retorna operacao PUT feita com sucesso! e envia uma resposta com o json que representa o itemCarrinho
-         return ResponseEntity.ok(itemCarrinho);
+         OUTPUT_ItemVenda_DTO itemVenda_editado=itemVendaService.editarItemVenda(itemCarrinhoDTO);
+         return ResponseEntity.ok(itemVenda_editado);
      }
 
      @DeleteMapping("/{itemVendaId}")
@@ -81,7 +78,7 @@ public class ItemVendaController {
             return ResponseEntity.notFound().build();
         }
 
-        itemVendaRepository.deleteById(itemVendaId);
+        itemVendaService.excluirItemVenda(itemVendaId);
         // Executou com suceeso e resposta sem body (Ideal para metodo http delete)
         return ResponseEntity.noContent().build();
      }

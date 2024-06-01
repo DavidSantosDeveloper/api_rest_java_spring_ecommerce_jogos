@@ -2,6 +2,7 @@ package com.jogos.ecommerce.api.controller;
 
 import java.util.List;
 import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,13 +17,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.jogos.ecommerce.domain.exception.*;
-import com.jogos.ecommerce.domain.model.*;
-import com.jogos.ecommerce.domain.repository.*;
-import com.jogos.ecommerce.domain.service.*;
+import com.jogos.ecommerce.domain.dto.input.INPUT_UsuarioDTO;
+import com.jogos.ecommerce.domain.dto.output.OUTPUT_ItemVenda_DTO;
+import com.jogos.ecommerce.domain.dto.output.OUTPUT_UsuarioDTO;
+import com.jogos.ecommerce.domain.exception.RegraDeNegocioException;
+import com.jogos.ecommerce.domain.model.ItemVenda;
+import com.jogos.ecommerce.domain.model.Usuario;
+import com.jogos.ecommerce.domain.repository.UsuarioRepository;
+import com.jogos.ecommerce.domain.service.UsuarioService;
 
 import jakarta.validation.Valid;
-
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor        // gera um construtor automaticamente
@@ -37,14 +41,13 @@ public class UsuarioController {
 
 
     @GetMapping("")
-    public List<Usuario> listar(){
-     
-        return usuarioRepository.findAll();
+    public List< OUTPUT_UsuarioDTO> listar(){
+        return usuarioService.ListarUsuario();
      }
 
      @GetMapping("/{usuarioId}")
-     public ResponseEntity<Usuario> buscarPorId(@PathVariable Long usuarioId){
-        Optional<Usuario> pesquisaPeloUsuario=usuarioRepository.findById(usuarioId);
+     public ResponseEntity<OUTPUT_UsuarioDTO> buscarPorId(@PathVariable Long usuarioId){
+        Optional<OUTPUT_UsuarioDTO> pesquisaPeloUsuario=Optional.ofNullable(usuarioService.findById(usuarioId));
 
         if(pesquisaPeloUsuario.isPresent()){
             return ResponseEntity.ok(pesquisaPeloUsuario.get()); 
@@ -56,23 +59,17 @@ public class UsuarioController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("")
-     public Usuario cadrastrar(@Valid @RequestBody  Usuario usuario){
-        // return usuarioRepository.save(usuario);
-        return usuarioService.salvarUsuario(usuario);
+     public OUTPUT_UsuarioDTO cadrastrar(@Valid @RequestBody INPUT_UsuarioDTO usuarioDTO){
+        return usuarioService.salvarUsuario(usuarioDTO);
      }
 
      @PutMapping("/{usuarioId}")
-     public ResponseEntity<Usuario>atualizar(@PathVariable Long usuarioId,@Valid @RequestBody Usuario usuario){
+     public ResponseEntity<OUTPUT_UsuarioDTO >atualizar(@PathVariable Long usuarioId,@Valid @RequestBody INPUT_UsuarioDTO usuarioDTO){
          if(usuarioRepository.existsById(usuarioId)==false){
              return ResponseEntity.notFound().build();
          }
-        //  associa o id passado via url ao objeto java criado(que foi criado via dados do corpo body)
-         usuario.setId(usuarioId);
-        //  metodo save verifica existe um usuario com id informado:Se sim,atualiza os dados.Senão cria um novo registro na tabela usuario 
-        //  usuarioRepository.save(usuario);
-        usuarioService.salvarUsuario(usuario);
-        //  retorna operacao PUT feita com sucesso! e envia uma resposta com o json que representa o usuario
-         return ResponseEntity.ok(usuario);
+        OUTPUT_UsuarioDTO usuario_editado=usuarioService.editarUsuario(usuarioDTO);
+         return ResponseEntity.ok(usuario_editado);
      }
 
      @DeleteMapping("/{usuarioId}")
@@ -81,8 +78,7 @@ public class UsuarioController {
             return ResponseEntity.notFound().build();
         }
 
-        usuarioRepository.deleteById(usuarioId);
-        // Executou com suceeso e resposta sem body (Ideal para metodo http delete)
+        usuarioService.excluirUsuario(usuarioId);
         return ResponseEntity.noContent().build();
      }
 
