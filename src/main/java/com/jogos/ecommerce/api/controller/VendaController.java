@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.jogos.ecommerce.domain.dto.input.INPUT_VendaDTO;
+import com.jogos.ecommerce.domain.dto.output.OUTPUT_VendaDTO;
 import com.jogos.ecommerce.domain.exception.*;
 import com.jogos.ecommerce.domain.model.*;
 import com.jogos.ecommerce.domain.repository.*;
@@ -37,17 +39,19 @@ public class VendaController {
 
 
     @GetMapping("")
-    public List<Venda> listar(){
+    public List<OUTPUT_VendaDTO> listar(){
      
-        return vendaRepository.findAll();
+        return vendaService.ListarVendas();
      }
 
      @GetMapping("/{vendaId}")
-     public ResponseEntity<Venda> buscarPorId(@PathVariable Long vendaId){
+     public ResponseEntity<OUTPUT_VendaDTO> buscarPorId(@PathVariable Long vendaId){
         Optional<Venda> pesquisaPeloVenda=vendaRepository.findById(vendaId);
 
         if(pesquisaPeloVenda.isPresent()){
-            return ResponseEntity.ok(pesquisaPeloVenda.get()); 
+            Venda venda=pesquisaPeloVenda.get();
+            OUTPUT_VendaDTO vendaDTO=new OUTPUT_VendaDTO(venda.getId(),venda.getDt_venda(),venda.getValor_total(),venda.getUsuario());
+            return ResponseEntity.ok(vendaDTO); 
         }
         else{
             return ResponseEntity.notFound().build();
@@ -56,23 +60,20 @@ public class VendaController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("")
-     public Venda cadrastrar(@Valid @RequestBody  Venda venda){
+     public OUTPUT_VendaDTO cadrastrar(@Valid @RequestBody  INPUT_VendaDTO vendaDTO){
         // return vendaRepository.save(venda);
-        return vendaService.salvarVenda(venda);
+        return vendaService.salvarVenda(vendaDTO);
      }
 
      @PutMapping("/{vendaId}")
-     public ResponseEntity<Venda>atualizar(@PathVariable Long vendaId,@Valid @RequestBody Venda venda){
+     public ResponseEntity<OUTPUT_VendaDTO>atualizar(@PathVariable Long vendaId,@Valid @RequestBody INPUT_VendaDTO vendaDTO){
          if(vendaRepository.existsById(vendaId)==false){
              return ResponseEntity.notFound().build();
          }
-        //  associa o id passado via url ao objeto java criado(que foi criado via dados do corpo body)
-         venda.setId(vendaId);
-        //  metodo save verifica existe um venda com id informado:Se sim,atualiza os dados.Senão cria um novo registro na tabela venda 
-        //  vendaRepository.save(venda);
-        vendaService.salvarVenda(venda);
+        
+        OUTPUT_VendaDTO venda_editada=vendaService.editarVenda(vendaDTO);
         //  retorna operacao PUT feita com sucesso! e envia uma resposta com o json que representa o venda
-         return ResponseEntity.ok(venda);
+         return ResponseEntity.ok(venda_editada);
      }
 
      @DeleteMapping("/{vendaId}")
@@ -81,7 +82,7 @@ public class VendaController {
             return ResponseEntity.notFound().build();
         }
 
-        vendaRepository.deleteById(vendaId);
+        vendaService.excluirVenda(vendaId);
         // Executou com suceeso e resposta sem body (Ideal para metodo http delete)
         return ResponseEntity.noContent().build();
      }

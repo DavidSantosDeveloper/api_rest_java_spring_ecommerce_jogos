@@ -15,7 +15,7 @@ import com.jogos.ecommerce.domain.model.*;
 public interface ItemCarrinhoRepository extends JpaRepository<ItemCarrinho,Long> {
     ItemCarrinho findById(long id);
     
-    @Query("SELECT new com.jogos.ecommerce.domain.dto.output.OUTPUT_ItemCarrinhoDTO(i.id,i.quantidade,i.preco_unitario,i.carrinho,i.produto) FROM Funcionario i")
+    @Query("SELECT new com.jogos.ecommerce.domain.dto.output.OUTPUT_ItemCarrinhoDTO(i.id,i.quantidade,i.preco_unitario,i.carrinho,i.produto) FROM ItemCarrinho i")
     List<OUTPUT_ItemCarrinhoDTO> findAllItemCarrinho();
 
 }

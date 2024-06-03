@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import com.jogos.ecommerce.domain.dto.ProdutoDTO;
 import com.jogos.ecommerce.domain.model.*;
-
+@Repository
 public interface ProdutoRepository extends JpaRepository<Produto,Long> {
     Produto findById(long id);
     //os campos p.id,... se referem aos campos do objeto DTO, ja p é o apelido da tabela
