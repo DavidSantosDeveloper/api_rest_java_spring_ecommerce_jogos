@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.jogos.ecommerce.domain.dto.CargoDTO;
+import com.jogos.ecommerce.domain.dto.input.INPUT_CargoDTO;
+import com.jogos.ecommerce.domain.dto.output.OUTPUT_CargoDTO;
 import com.jogos.ecommerce.domain.exception.*;
 import com.jogos.ecommerce.domain.model.*;
 import com.jogos.ecommerce.domain.repository.*;
@@ -38,14 +40,14 @@ public class CargoController {
 
 
     @GetMapping("")
-    public List<CargoDTO> listar(){
+    public List<OUTPUT_CargoDTO> listar(){
      
         return cargoService.ListarCargos();
      }
 
      @GetMapping("/{cargoId}")
-     public ResponseEntity<CargoDTO> buscarPorId(@PathVariable Long cargoId){
-        Optional<CargoDTO> pesquisaPeloCargo=Optional.ofNullable(cargoService.findById(cargoId));
+     public ResponseEntity<OUTPUT_CargoDTO> buscarPorId(@PathVariable Long cargoId){
+        Optional<OUTPUT_CargoDTO> pesquisaPeloCargo=Optional.ofNullable(cargoService.findById(cargoId));
 
         if(pesquisaPeloCargo.isPresent()){
             return ResponseEntity.ok(pesquisaPeloCargo.get()); 
@@ -57,36 +59,27 @@ public class CargoController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("")
-     public Cargo cadrastrar(@Valid @RequestBody  CargoDTO cargoDTO){
-        // return cargoRepository.save(cargoDTO);
+     public OUTPUT_CargoDTO cadrastrar(@Valid @RequestBody  INPUT_CargoDTO cargoDTO){
+
         return cargoService.salvarCargo(cargoDTO);
      }
 
      @PutMapping("/{cargoId}")
-     public ResponseEntity<CargoDTO>atualizar(@PathVariable Long cargoId,@Valid @RequestBody CargoDTO cargoDTO){
+     public ResponseEntity<OUTPUT_CargoDTO>atualizar(@PathVariable Long cargoId,@Valid @RequestBody INPUT_CargoDTO cargoDTO){
          if(cargoRepository.existsById(cargoId)==false){
              return ResponseEntity.notFound().build();
          }
-        //  associa o id passado via url ao objeto java criado(que foi criado via dados do corpo body)
-        Cargo cargo=new Cargo(cargoId,cargoDTO);
-        //  metodo save verifica existe um cargoDTO com id informado:Se sim,atualiza os dados.Senão cria um novo registro na tabela cargoDTO 
-        //  cargoRepository.save(cargoDTO);
-        cargoService.editarCargo(cargo);
-        //  retorna operacao PUT feita com sucesso! e envia uma resposta com o json que representa o cargoDTO
-         return ResponseEntity.ok(cargoDTO);
+         OUTPUT_CargoDTO cargo_editado=cargoService.editarCargo(cargoDTO);
+         return ResponseEntity.ok(cargo_editado);
      }
      @PatchMapping("/{cargoId}")
-     public ResponseEntity<CargoDTO>atualizarParcial(@PathVariable Long cargoId,@Valid @RequestBody CargoDTO cargoDTO){
+     public ResponseEntity<OUTPUT_CargoDTO>atualizarParcial(@PathVariable Long cargoId,@Valid @RequestBody INPUT_CargoDTO cargoDTO){
         if(cargoRepository.existsById(cargoId)==false){
             return ResponseEntity.notFound().build();
         }
-       //  associa o id passado via url ao objeto java criado(que foi criado via dados do corpo body)
-       Cargo cargo=new Cargo(cargoId,cargoDTO);
-       //  metodo save verifica existe um cargoDTO com id informado:Se sim,atualiza os dados.Senão cria um novo registro na tabela cargoDTO 
-       //  cargoRepository.save(cargoDTO);
-       cargoService.editarCargo(cargo);
-       //  retorna operacao PUT feita com sucesso! e envia uma resposta com o json que representa o cargoDTO
-        return ResponseEntity.ok(cargoDTO);
+     
+        OUTPUT_CargoDTO cargo_editado=cargoService.editarCargo(cargoDTO);
+        return ResponseEntity.ok(cargo_editado);
     }
 
      @DeleteMapping("/{cargoId}")
@@ -95,7 +88,7 @@ public class CargoController {
            return ResponseEntity.notFound().build();
         }
 
-        cargoRepository.deleteById(cargoId);
+        cargoService.excluirCargo(cargoId);
         // Executou com suceeso e resposta sem body (Ideal para metodo http delete)
         return ResponseEntity.noContent().build();
      }
