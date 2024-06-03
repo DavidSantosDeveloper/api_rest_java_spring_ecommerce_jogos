@@ -1,8 +1,8 @@
-package com.jogos.ecommerce.domain.dto;
+package com.jogos.ecommerce.domain.dto.output;
 
 import java.sql.Date;
 
-public record ClienteDTO(
+public record OUTPUT_ClienteDTO(
     Long id,
     String nome,
     String telefone,

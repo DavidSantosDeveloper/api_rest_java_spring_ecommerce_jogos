@@ -16,7 +16,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.jogos.ecommerce.domain.dto.ClienteDTO;
+
+import com.jogos.ecommerce.domain.dto.input.INPUT_ClienteDTO;
+import com.jogos.ecommerce.domain.dto.output.OUTPUT_ClienteDTO;
 import com.jogos.ecommerce.domain.exception.*;
 import com.jogos.ecommerce.domain.model.*;
 import com.jogos.ecommerce.domain.repository.*;
@@ -38,14 +40,14 @@ public class ClienteController {
 
 
     @GetMapping("")
-    public List<ClienteDTO> listar(){
+    public List<OUTPUT_ClienteDTO> listar(){
      
         return clienteService.ListarClientes();
      }
 
      @GetMapping("/{clienteId}")
-     public ResponseEntity<ClienteDTO> buscarPorId(@PathVariable Long clienteId){
-        Optional<ClienteDTO> pesquisaPeloCliente=Optional.ofNullable(clienteService.findById(clienteId));
+     public ResponseEntity<OUTPUT_ClienteDTO> buscarPorId(@PathVariable Long clienteId){
+        Optional<OUTPUT_ClienteDTO> pesquisaPeloCliente=Optional.ofNullable(clienteService.findById(clienteId));
 
         if(pesquisaPeloCliente.isPresent()){
             return ResponseEntity.ok(pesquisaPeloCliente.get()); 
@@ -57,21 +59,18 @@ public class ClienteController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("")
-     public Cliente cadrastrar(@Valid @RequestBody  ClienteDTO clienteDTO){
-        // return clienteRepository.save(cliente);
+     public OUTPUT_ClienteDTO cadrastrar(@Valid @RequestBody  INPUT_ClienteDTO clienteDTO){
         return clienteService.salvarCliente(clienteDTO);
      }
 
      @PutMapping("/{clienteId}")
-     public ResponseEntity<ClienteDTO>atualizar(@PathVariable Long clienteId,@Valid @RequestBody ClienteDTO clienteDTO){
+     public ResponseEntity<OUTPUT_ClienteDTO>atualizar(@PathVariable Long clienteId,@Valid @RequestBody INPUT_ClienteDTO clienteDTO){
         if(clienteRepository.existsById(clienteId)==false){
             return ResponseEntity.notFound().build();
         }
-        if(clienteDTO.id()!=null){
-           return ResponseEntity.badRequest().build();
-        }
-        clienteService.salvarCliente(clienteDTO);
-        return ResponseEntity.ok(clienteDTO);
+       
+        OUTPUT_ClienteDTO cliente_editado=clienteService.editarCliente(clienteDTO);
+        return ResponseEntity.ok(cliente_editado);
         
      }
 

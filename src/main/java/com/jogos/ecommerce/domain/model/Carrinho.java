@@ -44,14 +44,5 @@ public class Carrinho implements Serializable{
     @OneToMany(mappedBy = "carrinho")
     private List<ItemCarrinho> itemCarrinhos;
 
-     public Carrinho(CarrinhoDTO carrinho_dto){
-        this.usuario=carrinho_dto.usuario();
-        this.total=carrinho_dto.total();
-        
-    }
-    public Carrinho(Long carrinhoId,CarrinhoDTO carrinho_dto){
-        this.id=carrinho_dto.id();
-        this.usuario=carrinho_dto.usuario();
-        this.total=carrinho_dto.total();
-    } 
+  
 }

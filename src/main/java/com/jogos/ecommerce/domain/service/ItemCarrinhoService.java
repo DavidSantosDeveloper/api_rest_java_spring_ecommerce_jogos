@@ -3,7 +3,7 @@ package com.jogos.ecommerce.domain.service;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.jogos.ecommerce.domain.dto.ClienteDTO;
+
 import com.jogos.ecommerce.domain.dto.input.INPUT_ItemCarrinhoDTO;
 import com.jogos.ecommerce.domain.dto.output.OUTPUT_ItemCarrinhoDTO;
 import com.jogos.ecommerce.domain.exception.*;
