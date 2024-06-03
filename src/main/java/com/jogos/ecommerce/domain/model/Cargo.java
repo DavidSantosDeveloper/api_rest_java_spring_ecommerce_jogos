@@ -1,10 +1,6 @@
 package com.jogos.ecommerce.domain.model;
 
-
 import java.util.List;
-
-import com.jogos.ecommerce.domain.dto.CargoDTO;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -40,13 +36,5 @@ public class Cargo {
    
     private List<Funcionario> funcionarios;
 
-    public Cargo(CargoDTO cargoDTO){
-        this.nome=cargoDTO.nome();
-        this.descricao=cargoDTO.descricao();
-    }
-    public Cargo(Long id,CargoDTO cargoDTO){
-        this.id=id;
-        this.nome=cargoDTO.nome();
-        this.descricao=cargoDTO.descricao();
-    }
+  
 }

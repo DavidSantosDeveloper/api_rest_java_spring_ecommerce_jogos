@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.jogos.ecommerce.domain.dto.CargoDTO;
 import com.jogos.ecommerce.domain.dto.input.INPUT_CargoDTO;
 import com.jogos.ecommerce.domain.dto.output.OUTPUT_CargoDTO;
 import com.jogos.ecommerce.domain.exception.*;
