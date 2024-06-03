@@ -5,7 +5,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.jogos.ecommerce.domain.dto.input.INPUT_ClienteDTO;
 import com.jogos.ecommerce.domain.dto.output.OUTPUT_ClienteDTO;
-import com.jogos.ecommerce.domain.exception.*;
+
 import com.jogos.ecommerce.domain.model.*;
 import com.jogos.ecommerce.domain.repository.*;
 

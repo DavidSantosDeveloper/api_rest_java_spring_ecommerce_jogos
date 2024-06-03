@@ -18,11 +18,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.jogos.ecommerce.domain.dto.input.INPUT_UsuarioDTO;
-import com.jogos.ecommerce.domain.dto.output.OUTPUT_ItemVenda_DTO;
+
 import com.jogos.ecommerce.domain.dto.output.OUTPUT_UsuarioDTO;
 import com.jogos.ecommerce.domain.exception.RegraDeNegocioException;
-import com.jogos.ecommerce.domain.model.ItemVenda;
-import com.jogos.ecommerce.domain.model.Usuario;
 import com.jogos.ecommerce.domain.repository.UsuarioRepository;
 import com.jogos.ecommerce.domain.service.UsuarioService;
 

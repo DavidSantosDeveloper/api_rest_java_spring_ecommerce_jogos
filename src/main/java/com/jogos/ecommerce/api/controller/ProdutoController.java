@@ -1,5 +1,5 @@
 package com.jogos.ecommerce.api.controller;
-import java.util.ArrayList;
+
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +18,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.jogos.ecommerce.domain.exception.*;
 import com.jogos.ecommerce.domain.model.*;
-import com.jogos.ecommerce.domain.dto.*;
+
+import com.jogos.ecommerce.domain.dto.input.INPUT_ProdutoDTO;
+import com.jogos.ecommerce.domain.dto.output.OUTPUT_ProdutoDTO;
 import com.jogos.ecommerce.domain.repository.*;
 import com.jogos.ecommerce.domain.service.*;
 
@@ -36,25 +38,14 @@ public class ProdutoController {
     private ProdutoService produtoService;
 
     @GetMapping("")
-    public List<ProdutoDTO> listar(){
-        /* 
-        List<Produto> produtos=produtoRepository.findAll();
-        //conversao para  o para produtoDTO
-        List<ProdutoDTO> produtosDTO=new ArrayList<ProdutoDTO>();
-        for(int i=0;i< produtos.size();i++){
-            Produto produto=produtos.get(i);
-            ProdutoDTO produtoDTO=new ProdutoDTO(produto.getId(),produto.getNome(),produto.getPreco(),produto.getFoto_url(),produto.getDescricao(),produto.getCategoria());
-            produtosDTO.add(produtoDTO);  
-        }
-
-        return produtosDTO;
-        */
+    public List<OUTPUT_ProdutoDTO> listar(){
+    
         return produtoService.ListarProdutos();
      } 
 
      @GetMapping("/{produtoId}")
-     public ResponseEntity<ProdutoDTO> buscarPorId(@PathVariable Long produtoId){
-        Optional<ProdutoDTO> pesquisaPeloProduto=Optional.ofNullable(produtoService.findById(produtoId));
+     public ResponseEntity<OUTPUT_ProdutoDTO> buscarPorId(@PathVariable Long produtoId){
+        Optional<OUTPUT_ProdutoDTO> pesquisaPeloProduto=Optional.ofNullable(produtoService.findById(produtoId));
         if(pesquisaPeloProduto.isPresent()){
             return ResponseEntity.ok(pesquisaPeloProduto.get()); 
         }
@@ -67,23 +58,18 @@ public class ProdutoController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("")
-     public Produto cadrastrar(@Valid @RequestBody  ProdutoDTO produtoDTO){
-        Produto produto=new Produto(produtoDTO);
-        // return produtoRepository.save(produto);
-        return produtoService.salvarProduto(produto);
+     public OUTPUT_ProdutoDTO cadrastrar(@Valid @RequestBody INPUT_ProdutoDTO produtoDTO){
+       
+        return produtoService.salvarProduto(produtoDTO);
      }
 
      @PutMapping("/{produtoId}")
-     public ResponseEntity<ProdutoDTO>atualizar(@PathVariable Long produtoId,@Valid @RequestBody ProdutoDTO produtoDTO){
+     public ResponseEntity<OUTPUT_ProdutoDTO>atualizar(@PathVariable Long produtoId,@Valid @RequestBody INPUT_ProdutoDTO produtoDTO){
          if(produtoRepository.existsById(produtoId)==false){
              return ResponseEntity.notFound().build();
          }
-         if(produtoDTO.id()!=null){
-            return ResponseEntity.badRequest().build();
-         }
-         Produto produto=new Produto(produtoId,produtoDTO);
-         produtoService.salvarProduto(produto);
-         return ResponseEntity.ok(produtoDTO);
+        OUTPUT_ProdutoDTO produto_editado=produtoService.editarProduto(produtoDTO);
+         return ResponseEntity.ok(produto_editado);
      }
 
      @DeleteMapping("/{produtoId}")
@@ -91,9 +77,8 @@ public class ProdutoController {
         if(produtoRepository.existsById(produtoId)==false){
             return ResponseEntity.notFound().build();
         }
-
         produtoRepository.deleteById(produtoId);
-        // Executou com suceeso e resposta sem body (Ideal para metodo http delete)
+
         return ResponseEntity.noContent().build();
      }
 

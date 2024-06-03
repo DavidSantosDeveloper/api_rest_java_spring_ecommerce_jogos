@@ -1,5 +1,4 @@
 package com.jogos.ecommerce.domain.model;
-import com.jogos.ecommerce.domain.dto.*;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
@@ -42,22 +41,6 @@ public class Produto {
     private List<ItemCarrinho> itemCarrinhos;
     @OneToMany(mappedBy = "produto")
     private List<ItemVenda> itemVendas;
-
-
-    public Produto(ProdutoDTO produto_dto){
-        this.nome=produto_dto.nome();
-        this.preco=produto_dto.preco();
-        this.foto_url=produto_dto.foto_url();
-        this.descricao=produto_dto.descricao();
-        this.categoria=produto_dto.categoria();
-    }
-    public Produto(Long produtoId,ProdutoDTO produto_dto){
-        this.id=produtoId;
-        this.nome=produto_dto.nome();
-        this.preco=produto_dto.preco();
-        this.foto_url=produto_dto.foto_url();
-        this.descricao=produto_dto.descricao();
-        this.categoria=produto_dto.categoria();
-    }   
+ 
 
 }
