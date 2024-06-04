@@ -39,7 +39,7 @@ public class Cliente {
     private String nome;
     @Size(max=20)
     private String telefone;
-    @NotBlank
+     @NotBlank
     private  Date dt_nasc;
     @NotBlank
     private String cpf; 

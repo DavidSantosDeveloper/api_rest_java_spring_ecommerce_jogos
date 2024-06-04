@@ -14,7 +14,7 @@ import com.jogos.ecommerce.domain.model.*;
 public interface FuncionarioRepository extends JpaRepository<Funcionario,Long> {
     Funcionario findById(long id);
 
-     @Query("SELECT new com.jogos.ecommerce.domain.dto.output.OUTPUT_FuncionarioDTO(f.id,f.nome,f.dt_nasc,f.cpf,f.salario,f.cep,f.pais,f.estado,f.cidade,f.bairro,f.logradouro,f.numero,f.ponto_de_referencia) FROM Funcionario f")
+     @Query("SELECT new com.jogos.ecommerce.domain.dto.output.OUTPUT_FuncionarioDTO(f.id,f.nome,f.telefone,f.dt_nasc,f.cpf,f.salario,f.cep,f.pais,f.estado,f.cidade,f.bairro,f.logradouro,f.numero,f.ponto_de_referencia,f.cargo) FROM Funcionario f")
     List<OUTPUT_FuncionarioDTO> findAllFuncionarios();
 }
 
