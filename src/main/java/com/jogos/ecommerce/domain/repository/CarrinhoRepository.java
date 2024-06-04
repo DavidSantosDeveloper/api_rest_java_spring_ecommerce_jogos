@@ -16,7 +16,7 @@ public interface CarrinhoRepository extends JpaRepository<Carrinho,Long> {
     Carrinho findById(long id);
 
     //os campos c.id,... se referem aos campos do objeto DTO, ja c é o apelido da tabela
-    @Query("SELECT new com.jogos.ecommerce.domain.dto.output.OUTPUT_CarrinhoDTO(c.id, c.usuario.id, c.total) FROM Carrinho c")
+    @Query("SELECT new com.jogos.ecommerce.domain.dto.output.OUTPUT_CarrinhoDTO(c.id, c.usuario, c.total) FROM Carrinho c")
     List<OUTPUT_CarrinhoDTO> findAllCarrinhos();
 }
 
