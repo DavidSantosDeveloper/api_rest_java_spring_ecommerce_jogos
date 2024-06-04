@@ -25,7 +25,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @EqualsAndHashCode(onlyExplicitlyIncluded=true)
-
+@AllArgsConstructor
 @NoArgsConstructor
 public class ItemCarrinho {
 
