@@ -23,6 +23,7 @@ import lombok.Setter;
 @Setter
 @EqualsAndHashCode(onlyExplicitlyIncluded=true)
 @NoArgsConstructor
+@AllArgsConstructor
 public class Usuario {
    
     @Id
