@@ -1,5 +1,5 @@
 
-⚠️⚠️⚠ (EM FASE DE DESENVOLVIMENTO,não está totalmente funcional,apresentado alguns bugs)⚠️⚠️
+⚠️ (EM FASE DE DESENVOLVIMENTO,não está totalmente funcional,apresentado alguns bugs)⚠️⚠
 
 ## 🎮 E-commerce de Jogos
 
